@@ -15,13 +15,12 @@ credentials = ServiceAccountCredentials.from_json_keyfile_name(
 # Command-line arguments for the script
 user = sys.argv[1]
 fileId = sys.argv[2]
-print ("You are now executing this as " + user + " via a service account")
 
+# Become the specified user and delegate the credentials
 delegated_credentials = credentials.create_delegated(user)
 http_auth = delegated_credentials.authorize(Http())
 
-print ("Accessing permissions for file " + fileId + "...")
-
+# Grab the permissions from the specified file and spit them out
 drive = build('drive', 'v3', http=http_auth)
 response = drive.permissions().list(fileId=fileId).execute()
 print (json.dumps(response, sort_keys=True, indent=3))
